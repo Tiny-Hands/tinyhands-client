@@ -30,7 +30,7 @@ describe('SessionService', () => {
 
         beforeEach(() => {
             let promise = { data: { token: 123 } };
-            localStorage.token = null;
+            sessionStorage.token = null;
             mockBaseService.post.and.callFake(() => {
                 return {
                     then: (f) => {
@@ -46,9 +46,9 @@ describe('SessionService', () => {
         });
 
         let token = "Token 123";
-        it(`should set localStorage token to "${token}"`, () => {
+        it(`should set sessionStorage token to "${token}"`, () => {
             service.attemptLogin(username, password);
-            expect(localStorage.token).toEqual(token);
+            expect(sessionStorage.token).toEqual(token);
         });
 
         it(`should set root authenticated to true`, () => {
@@ -145,7 +145,7 @@ describe('SessionService', () => {
     describe('checkIfAuthenticated', () => {
         describe('when no token stored', () => {
             it('should reject promise', (done) => {
-                localStorage.clear();
+                sessionStorage.clear();
 
                 let result = service.checkIfAuthenticated();
 
@@ -162,7 +162,7 @@ describe('SessionService', () => {
         describe('when token is stored', () => {
             it('should set rootScope autheticated to true', (done) => {
                 $rootScope.authenticated = false;
-                localStorage.token = 'validToken';
+                sessionStorage.token = 'validToken';
 
                 let result = service.checkIfAuthenticated();
 
@@ -177,7 +177,7 @@ describe('SessionService', () => {
 
             it('should get current user', (done) => {
                 $rootScope.authenticated = false;
-                localStorage.token = 'validToken';
+                sessionStorage.token = 'validToken';
                 spyOn(service, 'me').and.callThrough();
 
                 let result = service.checkIfAuthenticated();

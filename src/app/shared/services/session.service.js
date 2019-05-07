@@ -16,7 +16,7 @@ export default class SessionService {
     attemptLogin(username, password) {
         return this.service.post('api/login/', { "username": username, "password": password })
             .then((promise) => {
-                localStorage.token = "Token " + promise.data.token;
+                sessionStorage.token = "Token " + promise.data.token;
                 this.root.authenticated = true;
                 return true;
             }, (reason) => {
@@ -105,7 +105,7 @@ export default class SessionService {
 
     checkIfAuthenticated() {
         let defer = this.$q.defer();
-        if (typeof localStorage.token === 'undefined') {
+        if (typeof sessionStorage.token === 'undefined') {
             defer.reject('Not Authenticated'); 
             return defer.promise;
         } else {
@@ -120,7 +120,7 @@ export default class SessionService {
     }
 
     clearSession() {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         this.user = {};
         this.root.authenticated = false; // Set authenticated to false
     }
