@@ -133,6 +133,10 @@ export default class BudgetService {
     getStaffItems(budgetId) {
         return this.service.get(`api/budget/${budgetId}/staff_item/`);
     }
+    
+    getCountry(country_id) {
+        return this.service.get(`api/country/${country_id}/`);
+    }
 
     /**
      * Function that updates the data for the budget form.

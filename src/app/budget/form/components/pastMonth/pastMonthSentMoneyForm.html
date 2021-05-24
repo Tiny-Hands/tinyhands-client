@@ -1,0 +1,30 @@
+<div class="col-md-offset-3 col-md-6">
+  <h2 class="text-center">Past Month Sent Money</h2>
+  <h4></h4>
+  <hr>
+  <div class="row">
+    <div ng-repeat="otherPastMonthItem in budgetCtrl.form.other.PastMonth">
+      <div class="col-md-4 col-md-offset-2">
+        <input class="form-control" type="text" ng-change="budgetCtrl.setTotals()" ng-model="otherPastMonthItem.name" ng-disabled="budgetCtrl.isViewing" required/>
+      </div>
+      <div class="col-md-4">
+        <input class="text-right form-control" type="number" ng-change="budgetCtrl.setTotals()" ng-model="otherPastMonthItem.cost" ng-disabled="budgetCtrl.isViewing" required/>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-danger" ng-click="budgetCtrl.removeItem(budgetCtrl.form.other.PastMonth, $index)" ng-hide="budgetCtrl.isViewing">Remove</button>
+      </div>
+      <br/>
+      <br/>
+    </div>
+    <div class="row">
+      <button class="btn btn-success col-xs-4 col-xs-offset-4" ng-click="budgetCtrl.form.other.PastMonth.push({})" ng-hide="budgetCtrl.isViewing">Add item</button>
+    </div>
+  </div>
+  <hr>
+  <div class="row center text-center">
+    <div class="col-md-6 col-md-offset-3">
+      <label>Past Month Sent Money Total</label>
+      <input class="text-center form-control" ng-value="budgetCtrl.pastMonthMoneySentTotal() | currency:budgetCtrl.currency" disabled="disabled" />
+    </div>
+  </div>
+</div>

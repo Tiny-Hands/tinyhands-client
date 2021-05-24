@@ -6,6 +6,7 @@ let Constants = {
         FoodAndGas: 6,
         Medical: 9,
         Miscellaneous: 2,
+        PastMonth: 11,
         Salaries: 8,
         Shelter: 5,
         Supplies: 4,

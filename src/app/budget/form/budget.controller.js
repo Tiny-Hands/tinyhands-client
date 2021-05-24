@@ -7,6 +7,7 @@ import administrationForm from './components/administration/administrationForm.h
 import miscellaneousForm from './components/miscellaneous/miscellaneousForm.html';
 import potentialVictimCareForm from './components/potentialVictimCare/potentialVictimCareForm.html';
 import awarenessForm from './components/awareness/awarenessForm.html';
+import pastMonth from './components/pastMonth/pastMonthSentMoneyForm.html';
 
 import categoryTemplate from './components/salaries/category.html';
 import detailTemplate from './detail.html';
@@ -230,6 +231,11 @@ export default class BudgetController {
     }
     // ENDREGION: Miscellaneous
     
+    pastMonthMoneySentTotal() {
+        let amount = this.getOtherCost(this.form.other.PastMonth); 
+        return amount;
+    }
+    
     staffItemsTotal() {
     	if (!this.form.staff || !this.form.staff.sortedStaff) {
     		return;
@@ -353,6 +359,12 @@ export default class BudgetController {
         this.service.getBorderStation(this.borderStationId).then(response => {
             this.form.station_name = response.data.station_name;
             this.currency = decodeURI(response.data.country_currency);
+            this.service.getCountry(response.data.operating_country).then(response => {
+                let options = response.data.options;
+                if ('pastMonthSent' in options && options.pastMonthSent) {
+                    this.sections.allSections.push({ name: 'Past Month Sent Money', templateUrl: pastMonth });
+                }
+            });
         });
     }
 

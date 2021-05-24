@@ -100,14 +100,24 @@
       </tbody>
       <tbody>
         <tr>
-          <td class="text-left text-large"><b>TOTAL</b></td>
+          <td class="text-left text-large"><b>Monthly Distribution Subtotal</b></td>
           <td>
             <p class="text-right text-large"><b>{{budgetCtrl.total | currency:budgetCtrl.currency}}</b></p>
           </td>
         </tr>
         <tr>
-          <td class="text-left active text-small">Last Month's Total</td>
+          <td class="text-left active text-small">Last Month's Distribution Subtotal</td>
           <td class="text-right active text-small">{{ budgetCtrl.form.previousData.last_months_cost | currency:budgetCtrl.currency}}</td>
+        </tr>
+        <tr ng-if="budgetCtrl.pastMonthMoneySentTotal() > 0">
+        	<td>&nbsp;</td>
+        </tr>
+        <tr ng-if="budgetCtrl.pastMonthMoneySentTotal() > 0">
+          <td class="text-left active text-small">
+          	<div>Past Month Sent Money Subtotal</div>
+          	<div>This total has already been sent and is not included in the monthly distribution.</div>
+          </td>
+          <td class="text-right active text-small">{{ budgetCtrl.pastMonthMoneySentTotal() | currency:budgetCtrl.currency}}</td>
         </tr>
       </tbody>
     </table>
