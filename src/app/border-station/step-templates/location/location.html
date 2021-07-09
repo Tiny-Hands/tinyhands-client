@@ -1,7 +1,7 @@
 <div id="location-boxes" class="row stretch-vertical">
-    <div class="col-md-3 stretch-vertical" ng-repeat="card in $ctrl.getCardInstances('Location')">
-        <div class="panel panel-default clickable col-md-12 padding-0" ng-click="$ctrl.openLocationModal(card, false, $index)"
+    <div class="col-md-3 stretch-vertical" ng-repeat="card in $ctrl.getCardInstances('Location')"
         		ng-if="$ctrl.getResponseOfQuestionById(card.responses, 963).value !== '__Other' && $ctrl.getResponseOfQuestionById(card.responses, 963).value !== 'Leave'">
+        <div class="panel panel-default clickable col-md-12 padding-0" ng-click="$ctrl.openLocationModal(card, false, $index)">
             <h3 class="panel-heading margin-top-0">{{$ctrl.getResponseOfQuestionById(card.responses, 963).value}}</h3>
             <div class="panel-body col-md-12" ng-if="$ctrl.getResponseOfQuestionById(card.responses, 973).value">
            		<form-step class="col-md-6">{{$ctrl.getResponseOfQuestionById(card.responses, 953).value}}</form-step>
