@@ -1,3 +1,8 @@
+// Changed this inspection to .ts which helped my IDE read the types from it
+// However, no typescript was added to this file, just the extension change
+// noinspection TypeScriptUnresolvedVariable
+// @ts-nocheck
+
 export default class IrfNewListService {
     constructor(BaseService) {
         'ngInject';

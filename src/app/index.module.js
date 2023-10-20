@@ -48,6 +48,8 @@ import pvfModule from './pvf/pvf.module';
 import sfModule from './sf/sf.module';
 import lfModule from './lf/lf.module';
 import incidentModule from './incident/incident.module';
+import reactTestModule from './reactTest/reactTest.module';
+import reactIrfListModule from './reactTest/reactIrfList/reactIrfList.module';
 
 import constants from './constants.js';
 import config from './index.config';
@@ -64,43 +66,48 @@ import MdfExportComponent from './components/mdf-export/mdf-export.component';
 import AssociatedPersonDirective from './components/associated-person/associated-person.directive';
 import AddressEntryDirective from './components/address-entry/address-entry.directive';
 import PaginateDirective from './components/paginate/paginate.directive';
+import PaginateComponent from "./components/paginate/paginate.component";
+import {lazyInjector} from "./lazyInjector";
+import DummyComponent from "./components/dummy-component/dummy-component.component";
 
 angular.module('tinyhandsFrontend', ['angular.chips', ngAnimate, ngCookies, ngCsv, ngFileUpload, ngSanitize, ngTouch, uiBootstrap, 'ui.dateTimeInput', 'ui.bootstrap', 'ui.bootstrap.datetimepicker',
-        sharedModule,
-        accountModule,
-        addressesModule,
-        borderStationModule,
-        budgetModule,
-        collectionIndicatorsModule,
-        CIFModule,
-        dashboardModule,
-        indicatorsModule,
-        IRFModule,
-        loginModule,
-        MonthlyReportModule,
-        VDFModule,
-        VIFModule,
-        photoExportModule,
-        countriesModule,
-        idmanagementModule,
-        personManagementModule,
-        traffickermatchModule,
-        relatedFormsModule,
-        helpModule,
-        operationsDashboardModule,
-        stationDataModule,
-        locationStaffModule,
-        locationDataModule,
-        auditModule,
-        legalCaseModule,
-        gospelVerificationModule,
-        empModule,
-        gspModule,
-        pvfModule,
-        sfModule,
-        lfModule,
-        incidentModule,
-    ])
+    sharedModule,
+    accountModule,
+    addressesModule,
+    borderStationModule,
+    budgetModule,
+    collectionIndicatorsModule,
+    CIFModule,
+    dashboardModule,
+    indicatorsModule,
+    IRFModule,
+    loginModule,
+    MonthlyReportModule,
+    VDFModule,
+    VIFModule,
+    photoExportModule,
+    countriesModule,
+    idmanagementModule,
+    personManagementModule,
+    traffickermatchModule,
+    relatedFormsModule,
+    helpModule,
+    operationsDashboardModule,
+    stationDataModule,
+    locationStaffModule,
+    locationDataModule,
+    auditModule,
+    legalCaseModule,
+    gospelVerificationModule,
+    empModule,
+    gspModule,
+    pvfModule,
+    sfModule,
+    lfModule,
+    incidentModule,
+    reactTestModule,
+    reactIrfListModule,
+])
 
     .constant('constants', constants)
 
@@ -117,5 +124,22 @@ angular.module('tinyhandsFrontend', ['angular.chips', ngAnimate, ngCookies, ngCs
     .directive('associatedPerson', AssociatedPersonDirective)
     .component('mdfexport', MdfExportComponent)
     .component('createbudget', CreateButtonComponent)
+    .component('dummyComponent', DummyComponent)
+    .component('paginateComponent', PaginateComponent)
 
-    .factory('auth0Service', [createAuth0Service]);
+    .factory('auth0Service', [createAuth0Service])
+
+    // Need global $injector for wrapping angular components in React with angular2react,
+    // see https://github.com/coatue-oss/angular2react
+    .run(['$injector', function (_$injector) {
+        lazyInjector.$injector = _$injector
+        // reactBootstrap()
+    }]);
+
+// If we ever want to have React and Angular both live in the app
+// from https://github.com/bcherny/angular2react-demos/blob/master/multi-file/src/index.jsx
+// angular.bootstrap(document.createElement('div'), ['Demo'])
+//
+// function reactBootstrap () {
+//   render(<One />, document.querySelector('#App'))
+// }
