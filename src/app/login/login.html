@@ -16,4 +16,14 @@
       <p><a ui-sref="password-reset">Forgot your password?</a></p>
     </form>
   </div>
+  <div class="row">
+    <form class="col-md-offset-3 col-md-6" ng-submit="login.attemptAuth0Login()">
+      <hr/>
+      <input type="submit" class="btn btn-secondary btn-lg" value="LJI Account Log In" />
+      <br/> <br/>
+      <p>Your LJI Account is your Operations Management username and password.
+        If you don't use Operations Management, use the login above.</p>
+      <p>If you forgot your LJI Account password, you need to reset it Operations Management.</p>
+    </form>
+  </div>
 </div>

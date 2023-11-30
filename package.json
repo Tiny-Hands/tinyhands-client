@@ -5,12 +5,15 @@
     "test": "./node_modules/karma/bin/karma start",
     "testSingleRun": "./node_modules/karma/bin/karma start --single-run",
     "dev": "webpack-dev-server --env.dev --content-base dist/ --devtool eval --progress --colors --open",
-    "local": "rimraf ./dist/* && webpack -p --env.local",
-    "stage": "rimraf ./dist/* && webpack -p --env.staging",
-    "prod": "rimraf ./dist/* && webpack -p --env.production",
+    "devOnStaging": "webpack-dev-server --env.staging --content-base dist/ --devtool eval --progress --colors --open",
+    "devOnLocal": "webpack-dev-server --env.local --content-base dist/ --devtool eval --progress --colors --open",
+    "local": "rimraf ./dist/* && webpack --env.local",
+    "stage": "rimraf ./dist/* && webpack --env.staging",
+    "prod": "rimraf ./dist/* && webpack --env.production",
     "serve-dist": "ws -p 3000 -d ./dist/"
   },
   "dependencies": {
+    "@auth0/auth0-spa-js": "^2.0.0",
     "@uirouter/angularjs": "1.0.20",
     "angular": "1.7.9",
     "angular-animate": "1.7.5",
@@ -69,8 +72,6 @@
     "phantomjs-prebuilt": "^2.1.16",
     "rimraf": "2.6.2",
     "style-loader": "0.13.2",
-    "uglify-js": "2.8.4",
-    "uglifyjs-webpack-plugin": "0.4.6",
     "url-loader": "0.5.8",
     "webpack": "2.6.1",
     "webpack-dev-server": "2.5.0"

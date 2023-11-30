@@ -18,7 +18,7 @@ function getServerApiUrl(env) {
         return '"http://localhost/"';
     }
 }
-
+var nodeModulesPath = path.resolve(__dirname, "node_modules/");
 var srcPath = path.resolve(__dirname, "src/");
 var appPath = path.resolve(srcPath, "app/");
 
@@ -37,7 +37,14 @@ module.exports = function (env) {
             },
             {
                 test: /\.js$/,
-                include: srcPath,
+                // Run babel on all of our stuff and also some problematic ES6-only modules
+                include: [srcPath, nodeModulesPath],
+                exclude: function(modulePath) {
+                  return (
+                    /node_modules/.test(modulePath) &&
+                    !/node_modules\\@auth0/.test(modulePath)
+                  );
+                },
                 loader: 'babel-loader'
             },
             {

@@ -1,5 +1,5 @@
 export default class SessionService {
-    constructor($rootScope, $state, $timeout, $q, BaseService, $cookies) {
+    constructor($rootScope, $state, $timeout, $q, BaseService, $cookies, auth0Service) {
         'ngInject';
 
         this.service = BaseService;
@@ -8,6 +8,7 @@ export default class SessionService {
         this.timeout = $timeout;
         this.$q = $q;
         this.cookies = $cookies;
+        this.auth0Service = auth0Service;
 
         this.user = {};
         this.userPermissions = [];
@@ -109,11 +110,32 @@ export default class SessionService {
         return perms;
     }
 
-    checkIfAuthenticated() {
+    checkIfAuthenticatedAuth0() {
         let defer = this.$q.defer();
-        if (typeof localStorage.token === 'undefined') {
-            defer.reject('Not Authenticated'); 
+        if(this.auth0Service.clientReadyPromise) {
+            const nonQPromise = this.auth0Service.clientReadyPromise.then((client) => {
+                return client.isAuthenticated();
+            }).then((isAuthenticated) => {
+                if(!isAuthenticated){
+                    defer.reject('Not Authenticated');
+                    return defer.promise;
+                } else {
+                    return this.me().then(() => {
+                        this.root.authenticated = true;
+                    });
+                }
+            });
+            // When everything returns, trigger angular digest cycle to refresh page
+            return this.$q.when(nonQPromise);
+        } else {
+            defer.reject('Not Authenticated');
             return defer.promise;
+        }
+    }
+
+    checkIfAuthenticated() {
+        if (typeof localStorage.token === 'undefined') {
+            return this.checkIfAuthenticatedAuth0();
         } else {
             this.root.authenticated = true;
             return this.me();
@@ -122,6 +144,21 @@ export default class SessionService {
 
     logout() {
         this.service.get('api/logout/');
+        if(this.auth0Service.clientReadyPromise) {
+            const nonQPromise = this.auth0Service.clientReadyPromise.then((client) => {
+                client.logout();
+            }).finally(() => {
+                // Always do legacy logout
+                this.logoutLegacy();
+            });
+            // When everything returns, trigger angular digest cycle to refresh page
+            return this.$q.when(nonQPromise);
+        } else {
+            this.logoutLegacy();
+        }
+    }
+
+    logoutLegacy() {
         this.clearSession();
         this.routeState.go('login');
     }

@@ -57,6 +57,7 @@ import constants from './constants.js';
 import config from './index.config';
 import routerConfig from './index.route';
 import httpProviderConfig from './httpProvider.config';
+import createAuth0Service from "./auth0.service";
 
 import NavbarDirective from './components/navbar/navbar.directive';
 import CsvExportDirective from './components/csv-export/csv-export.directive';
@@ -68,7 +69,7 @@ import AssociatedPersonDirective from './components/associated-person/associated
 import AddressEntryDirective from './components/address-entry/address-entry.directive';
 import PaginateDirective from './components/paginate/paginate.directive';
 
-angular.module('tinyhandsFrontend', ['angular.chips', ngAnimate, ngCookies, ngCsv, ngFileUpload, ngSanitize, ngTouch, uiBootstrap, 'ui.dateTimeInput', 'ui.bootstrap', 'ui.bootstrap.datetimepicker', 
+angular.module('tinyhandsFrontend', ['angular.chips', ngAnimate, ngCookies, ngCsv, ngFileUpload, ngSanitize, ngTouch, uiBootstrap, 'ui.dateTimeInput', 'ui.bootstrap', 'ui.bootstrap.datetimepicker',
         sharedModule,
         accountModule,
         addressesModule,
@@ -122,4 +123,6 @@ angular.module('tinyhandsFrontend', ['angular.chips', ngAnimate, ngCookies, ngCs
     .directive('autocompleteAddress2', AutocompleteAddress2Directive)
     .directive('associatedPerson', AssociatedPersonDirective)
     .component('mdfexport', MdfExportComponent)
-    .component('createbudget', CreateButtonComponent);
+    .component('createbudget', CreateButtonComponent)
+
+    .factory('auth0Service', [createAuth0Service]);
