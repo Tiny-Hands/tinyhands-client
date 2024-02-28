@@ -1,0 +1,86 @@
+<fieldset id="staffContract" class="container-fluid">
+	<div class="col-md-1">
+		<div class="row text-center">
+			<label>currency</label>
+		</div>
+		<div class="row text-center">
+			<select ng-model="vm.contractProject.currencyType">
+				<option>local</option>
+				<option>USD</option>
+			</select>
+		</div>
+	</div>
+	<div class="col-md-10" ng-if="vm.projectId !== null">
+		<table class="table table-striped" ng-model="vm.contractProject">
+	        <thead>
+	            <tr>
+	            	<th class="contract-category">Category</th>
+	                <th class="contract-twelve">Last 12</th>
+	                <th ng-repeat="monthIndex in [0,1,2,3,4,5,6]" class="contract-month">{{ vm.getContractMonthHeader(monthIndex) }}</th>
+	                <th class="contract-arrow">
+	                	<button ng-if="vm.contractProject.currentIndex > 0"class="btn btn-xs" ng-click="vm.contractScrollLeft()">
+					        <i class="fa fa-arrow-left"></i>
+					    </button>
+	                <th class="contract-arrow">
+	                	<button class="btn btn-xs" ng-click="vm.contractScrollRight()">
+					        <i class="fa fa-arrow-right"></i>
+					    </button>
+	                </th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr ng-repeat="category in vm.contractProject.labels">
+	            	<td>{{ category }}</td>
+	            	<td class="contract-twelve"><div ng-if="vm.contractProject.twelveMonth[category]">{{ vm.formatAmount(vm.contractProject.twelveMonth[category]) }}</div></td>
+	                <td ng-repeat="monthIndex in [0,1,2,3,4,5,6]" class="contract-month">{{ vm.getContractMonthData(category, monthIndex) }}</td>
+	            </tr>
+	        </tbody>
+	    </table>
+	</div>
+	<div class="col-md-10 text-center" ng-if="vm.projectId === null">
+		<h2>There are no associated projects</h2>
+	</div>
+	
+	<div class="row col-md-12 padding-bottom-20" ng-if="vm.contractView">
+		<label>Attachments</label>
+		<select ng-model="vm.attachmentType">
+			<option value=''>All</option>
+			<option>Contract</option>
+			<option>C & M</option>
+			<option>Miscellaneous</option>
+		</select>
+		<table class="table table-striped" ng-model="vm.attachments">
+			<thead>
+				<tr>
+					<th width="10%">Type</th>
+					<th width="25%">File</th>
+					<th width="10%">Expiration Date</th>
+					<th width="10%">Date Added</th>
+					<th width="40%">Description</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="attachment in vm.attachments" ng-if="!attachment.isRemoved && (vm.attachmentType==='' || vm.attachmentType===attachment.option)" >
+					<td>{{ attachment.option }}</td>
+					<td ng-if="!vm.isString(attachment.attachment)">{{ attachment.attachment.name }}</th>
+					<td ng-if="vm.isString(attachment.attachment)"><a href="{{ vm.getScannedFormUrl(attachment.attachment) }}">{{ attachment.attachment.split("/")[5] }}</a></th>
+					<td>{{ attachment.expiration_date }}</th>
+					<td>{{ attachment.attach_date }}</th>
+					<td>{{ attachment.description }}</th>
+					<td><button ng-if="vm.contractEdit" class="btn btn-success"
+        					ng-click="vm.openAttachment(attachment, $index, false)"><i class="fa fa-pencil-square"></i></button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div ng-if="vm.contractEdit" class="row col-md-12 text-center padding-bottom-20">
+		<button class="btn btn-success" ng-click="vm.addAttachment()"><i class="fa fa-plus"></i></button>
+	</div>
+	
+	<div class="container-fluid padding-bottom-20" ng-if="vm.contractEdit">
+        <div class="row col-md-12 text-center">
+            <button class="btn btn-success margin-left-20" ng-if="vm.contractModified()" ng-click="vm.contractSave()">Save</button>
+        </div>
+    </div>
+</fieldset>

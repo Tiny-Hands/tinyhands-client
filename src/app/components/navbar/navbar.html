@@ -102,16 +102,21 @@
             <!-- END: Projects -->
             
             <!-- START: Staff/SC -->
-			<li class="dropdown" ng-class="{open:staffOpen}" ng-if="navbarCtrl.session.checkPermission('STAFF','VIEW',null, null)"
+			<li class="dropdown" ng-class="{open:staffOpen}" ng-if="navbarCtrl.session.checkPermission('STAFF','VIEW_BASIC',null, null)"
                 ng-mouseleave="staffOpen = false">
                 <a class="dropdown-toggle" data-toggle="dropdown" ng-click="staffOpen=!staffOpen">Staff/SC
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                 	<li>
-                    	<a ng-show="navbarCtrl.session.checkPermission('STAFF','VIEW',null, null)"
+                    	<a ng-show="navbarCtrl.session.checkPermission('STAFF','VIEW_BASIC',null, null)"
                            ui-sref="staffList"
                            ng-click="navbarCtrl.trackButtonClick('Staff')">Staff</a>
+                    </li>
+                	<li>
+                    	<a ng-show="navbarCtrl.session.checkPermission('SUBCOMMITTEE','VIEW_BASIC',null, null)"
+                           ui-sref="subcommitteeList"
+                           ng-click="navbarCtrl.trackButtonClick('Staff')">Subcommittee</a>
                     </li>
                 </ul>
             </li>

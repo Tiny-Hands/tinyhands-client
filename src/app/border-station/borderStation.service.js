@@ -106,4 +106,8 @@ export default class BorderStationService {
     getStaffList(queryParameters) {
 		return this.service.get('api/staff/', queryParameters);
 	}
+	
+	getSubcommitteeList(queryParameters) {
+		return this.service.get('api/committee-member/', queryParameters);
+	}
 }

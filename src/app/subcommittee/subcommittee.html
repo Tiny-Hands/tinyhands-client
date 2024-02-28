@@ -1,0 +1,127 @@
+<div id="subcommittee" class="container-fluid padding-top-20">
+<fieldset id="staffBasic" class="container-fluid" ng-disabled="!$ctrl.basicEdit">
+	<div class="row">
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3">First Name</label>
+            <input class="col-md-9" type="text" class="form-control" placeholder="First Name" ng-model="$ctrl.subcommittee.first_name">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="lastName">Last Name</label>
+            <input class="col-md-9" type="text" class="form-control" placeholder="Last Name"
+                   ng-model="$ctrl.subcommittee.last_name">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="lastName">Country</label>
+            <div class="col-md-9">
+            	<select ng-model="$ctrl.subcommittee.country" ng-disabled="$ctrl.subcommittee.id !== null && $ctrl.subcommittee.country !== null">
+            		<option value="{{ country.id }}" ng-repeat="country in $ctrl.countries">{{ country.name }}</option>
+            	</select>
+            </div>
+          </div>
+	</div>
+	<div class="row">
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="email">Email</label>
+            <input class="col-md-9" type="text" class="form-control" placeholder="Email Address"
+                   ng-model="$ctrl.subcommittee.email">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-4" for="phone">Phone Number</label>
+            <input class="col-md-8" type="text" class="form-control" placeholder="Phone Number"
+                   ng-model="$ctrl.subcommittee.phone">
+          </div>
+          <div class="col-sm-4 form-group">
+           <label class="col-md-3" for="position">Position</label>
+           <input class="col-md-9" type="text" class="form-control" placeholder="Position"
+                  ng-model="$ctrl.subcommittee.position">
+         </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 form-group">
+           <label class="col-md-3" for="id_card">Receives MDF</label>
+           <input type="checkbox" id="id_card" ng-model="$ctrl.subcommittee.receives_money_distribution_form"/>
+         </div>
+	</div>
+	<hr>
+	<div class="row col-md-12 padding-bottom-20">
+      	<table class="table table-striped" float-thead="vm.stickyOptions" ng-model="vm.subcommittee">
+        	<thead class="sticky-table-header">
+        		<tr>
+        			<th colspan="5" class="text-center">
+        				Projects &nbsp;
+        				<button class="btn btn-success" ng-click="$ctrl.addProject()"><i class="fa fa-plus"></i></button>
+        			</th>
+        		</tr>
+        		<tr>
+        			<th>Name</th>
+        			<th>Code</th>
+        			<th></th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        		<tr ng-repeat="project in $ctrl.subcommittee.member_projects">
+        			<td><a ng-href="{{$ctrl.getProjectRef(project)}}">{{ $ctrl.projectsById[project].station_name }}</a></td>
+        			<td>{{ $ctrl.projectsById[project].station_code }}</td>
+        			<td>
+        				<button ng-if="$ctrl.session.checkPermission('SUBCOMMITTEE','EDIT_BASIC', $ctrl.projectsById[project].operating_country.id,project)"
+        						class="btn btn-danger" ng-click="$ctrl.removeProject(project)"><i class="fa fa-minus"></i></button>
+        			</td>
+        		</tr>
+        	</tbody>
+        </table>
+	</div>
+	<div class="row col-md-12 padding-bottom-20" ng-if="$ctrl.contractView">
+		<div class="col-md-3"></div>
+		<div class="center-vertical col-md-4">
+			<div class="row col-md-12">
+            	<label>Signed SC Agreement</label>
+            </div>
+            <div class="row col-md-12">
+            	<input type="file" ngf-select value="Choose File" ng-model="$ctrl.subcommittee.sc_agreement" ng-disabled="!$ctrl.contractEdit">
+            </div>
+            <div class="row col-md-12">
+	            <div ng-if="!$ctrl.isString($ctrl.subcommittee.sc_agreement)">
+	        		<p>{{ $ctrl.subcommittee.sc_agreement.name }}</p>
+	        	</div>
+	        	<div ng-if="$ctrl.isString( $ctrl.subcommittee.sc_agreement)">
+	        		<a href="{{ $ctrl.getScannedFormUrl($ctrl.subcommittee.sc_agreement) }}">{{ $ctrl.subcommittee.sc_agreement.split("/")[6] }}</a>
+	        	</div>
+        	</div>
+       	</div>
+       	<div class="center-vertical col-md-4">
+			<div class="row col-md-12">
+				<label>Signed Corruption & Misconduct Agreement</label>
+            </div>
+            <div class="row col-md-12">
+            	<input type="file" ngf-select value="Choose File" ng-model="$ctrl.subcommittee.misconduct_agreement" ng-disabled="!$ctrl.contractEdit">
+            </div>
+			<div class="row col-md-12">
+	            <div ng-if="!$ctrl.isString($ctrl.subcommittee.misconduct_agreement)">
+	        		<p>{{ $ctrl.subcommittee.misconduct_agreement.name }}</p>
+	        	</div>
+	        	<div ng-if="$ctrl.isString($ctrl.subcommittee.misconduct_agreement)">
+	        		<a href="{{ $ctrl.getScannedFormUrl($ctrl.subcommittee.misconduct_agreement) }}">{{ $ctrl.subcommittee.misconduct_agreement.split("/")[6] }}</a>
+	        	</div>
+	        	
+        	</div>
+       	</div>
+	</div>
+      
+    <div class="container-fluid padding-bottom-20" ng-if="$ctrl.basicEdit && !$ctrl.isRemove">
+        <div class="col-md-6 text-right">
+            <button class="btn btn-success margin-left-20" ng-click="$ctrl.submit()">Submit</button>
+        </div>
+        <div class="col-md-6 text-left" ng-if="$ctrl.canDelete">
+            <button class="btn btn-danger" ng-click="$ctrl.isRemove=true">Delete</button>
+        </div>
+    </div>
+    <div class="container-fluid padding-bottom-20" ng-if="$ctrl.isRemove">
+        <div class="col-md-6 text-right">
+            <button class="btn btn-success margin-left-20" ng-click="$ctrl.isRemove=false">Cancel Delete</button>
+        </div>
+        <div class="col-md-6 text-left" ng-if="$ctrl.canDelete">
+            <button class="btn btn-danger" ng-click="$ctrl.deleteMember()">Confirm Delete</button>
+        </div>
+    </div>
+</fieldset>
+</div>

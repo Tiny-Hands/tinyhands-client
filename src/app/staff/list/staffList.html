@@ -1,4 +1,4 @@
-<div class="container" id="subcommitteeList"><br/>
+<div class="container" id="staffList"><br/>
 
     <div class="row">
         <div class="col-xs-7 text-center">
@@ -12,78 +12,52 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-2" >
-        	<p>Country</p>
-            <div ng-dropdown-multiselect="" options="staffListCtrl.countryDropDown.options"
-							selected-model="staffListCtrl.countryDropDown.selectedOptions"
-                             extra-settings="staffListCtrl.countryDropDown.settings"
-                             translation-texts="staffListCtrl.countryDropDown.customText"
-                             events="staffListCtrl.countryDropDown.eventListener">
+    <div class="row padding-bottom-10">
+        <div class="col-md-3" >
+        	<div class="col-md-6">
+	        	<p>Country</p>
+	            <div ng-dropdown-multiselect="" options="staffListCtrl.countryDropDown.options"
+								selected-model="staffListCtrl.countryDropDown.selectedOptions"
+	                             extra-settings="staffListCtrl.countryDropDown.settings"
+	                             translation-texts="staffListCtrl.countryDropDown.customText"
+	                             events="staffListCtrl.countryDropDown.eventListener">
+				</div>
 			</div>
+			<div class="col-md-6" ng-if="staffListCtrl.countryDropDown.selectedOptions.length!==0 && staffListCtrl.projects.length!==0">
+				<p>Project</p>
+	        	<select ng-model="staffListCtrl.queryParameters.project_id" ng-change="staffListCtrl.searchStaff()">
+	        		<option value=''>All</option>
+	        		<option value="{{ project.id }}" ng-repeat="project in staffListCtrl.projects"
+	        				ng-if="staffListCtrl.countryDropDown.selectedOptions[0].id===project.operating_country">{{ project.station_name }}</option>
+	        	</select>
+        	</div>
         </div>
-        <div class="col-md-2" ng-if="staffListCtrl.countryDropDown.selectedOptions.length!==0 && staffListCtrl.projects.length!==0">
-        	<p>Project</p>
-        	<select ng-model="staffListCtrl.queryParameters.project_id" ng-change="staffListCtrl.searchStaff()">
-        		<option value=''>All</option>
-        		<option value="{{ project.id }}" ng-repeat="project in staffListCtrl.projects"
-        				ng-if="staffListCtrl.countryDropDown.selectedOptions[0].id===project.operating_country">{{ project.station_name }}</option>
-        	</select>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+        	<div class="row">&nbsp;</div>
+        	<a ng-repeat="stepTemplate in staffListCtrl.stepTemplates"
+        		class="btn btn-default"
+        		ng-class="{active: staffListCtrl.selectedStep == $index}" 
+        		ng-click="staffListCtrl.selectedStep = $index">{{stepTemplate.name}}</a>
         </div>
 
         <!-- Search -->
-        <div class="col-md-3 pull-right">
-        	<input ng-change="staffListCtrl.searchStaff()" ng-model="staffListCtrl.queryParameters.search" placeholder="Search" autofocus>
+        <div class="col-md-2 pull-right">
+        	<div>
+        		<input ng-change="staffListCtrl.searchStaff()" ng-model="staffListCtrl.queryParameters.search" placeholder="Search" autofocus>
+        	</div>
+        	<div>
+	        	<select ng-model="staffListCtrl.currency" ng-if="staffListCtrl.stepTemplates[staffListCtrl.selectedStep].name === 'Contract'">
+	        		<option value="local">local currency</option>
+	        		<option value="USD">US currency</option>
+	        	</select>
+	        </div>
         </div>
         <!-- End search -->
     </div>
-    <br/>
-    <table class="table table-striped" float-thead="staffListCtrl.stickyOptions" ng-model="staffListCtrl.staffList">
-        <thead class="sticky-table-header">
-            <tr>
-                <th ng-click="staffListCtrl.updateSort('first_name')" width="10%">First Name
-                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('first_name', '!reverse'),
-                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('first_name', 'reverse') }"></i>
-                </th>
-                <th ng-click="staffListCtrl.updateSort('last_name')" width="12%">Last Name
-                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('last_name', '!reverse'),
-                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('last_name', 'reverse')}"></i>
-                </th>
-                <th ng-click="staffListCtrl.updateSort('email')" width="20%">Email
-                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('email', '!reverse'),
-                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('email', 'reverse')}"></i>
-                </th>
-                <th ng-click="staffListCtrl.updateSort('country__name')" width="10%">Country
-                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('country__name', '!reverse'),
-                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('operating_country__name', 'reverse')}"></i>
-                </th>
-                <th ng-click="staffListCtrl.updateSort('phone')" width="11%">Phone
-                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('phone', '!reverse'),
-                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('phone', 'reverse')}"></i>
-                </th>
-                <th  width="15%">Position</th>
-                <th width="12%">Projects</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="staff in staffListCtrl.staffList | orderBy:this.queryParameters.ordering:this.queryParameters.reverse">
-                <td>{{ staff.first_name }}</td>
-                <td>{{ staff.last_name }}</td>
-                <td>{{ staff.email }}</td>
-                <td>{{ staffListCtrl.getCountryName(staff.country) }}</td>
-                <td>{{ staff.phone}}</td>
-                <td class="ellipsis" title="{{ staff.position }}">{{ staff.position}}</td>
-                <td class="ellipsis" title="{{ staff.projectText }}">{{ staff.projectText }}</td>
-                <td ng-if="staffListCtrl.session.checkPermission('STAFF','VIEW', staff.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{staff.viewUrl}}">View</a></td>
-                <td ng-if="staffListCtrl.session.checkPermission('STAFF','EDIT', staff.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{staff.editUrl}}">Edit</a></td>
-            </tr>
-            <tr ng-show="staffListCtrl.staffList.length == 0">
-                <td colspan="12" style="text-align:center;"><h2>No Staff Matched your search for: "{{ staffListCtrl.queryParameters.search }}"</h2></td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="staff-content">
+        <div ng-repeat="template in staffListCtrl.stepTemplates" ng-include="template.template" ng-if="staffListCtrl.selectedStep === $index"></div>
+    </div>
 
     <div class="row text-center">
         <paginate page-control="staffListCtrl.paginate" controller="staffListCtrl">

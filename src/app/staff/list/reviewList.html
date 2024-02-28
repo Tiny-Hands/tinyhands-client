@@ -1,0 +1,41 @@
+	<table class="table table-striped" float-thead="staffListCtrl.stickyOptions" ng-model="staffListCtrl.staffList">
+        <thead class="sticky-table-header">
+            <tr>
+            	<th width="8%">Projects</th>
+                <th ng-click="staffListCtrl.updateSort('first_name,last_name')" width="18%">Name
+                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('first_name,last_name', '!reverse'),
+                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('first_name,last_name', 'reverse') }"></i>
+                </th>
+                <th width="14%">Role</th>
+                <th width="10%"># Reviews</th>
+                <th width="7%">Leadership</th>
+                <th width="7%">Obedience</th>
+                <th width="7%">Faithfulness</th>
+                <th width="7%">Alertness</th>
+                <th width="7%">Questioning</th>
+                <th width="7%">Awareness</th>
+                <th width="7%">TOTAL</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="staff in staffListCtrl.staffList | orderBy:this.queryParameters.ordering:this.queryParameters.reverse">
+            	<td class="ellipsis" title="{{ staff.projectText }}">{{ staff.projectText }}</td>
+                <td>{{ staff.first_name }} {{ staff.last_name }}</td>
+                <td class="ellipsis" title="{{ staff.position }}">{{ staff.position}}</td>
+                <td>{{ staff.review_data.review_count}}</td>
+                <td>{{ staff.review_data.leadership }}</td>
+                <td>{{ staff.review_data.obedience }}</td>
+                <td>{{ staff.review_data.faithfulness }}</td>
+                <td>{{ staff.review_data.alertness }}</td>
+                <td>{{ staff.review_data.questioning }}</td>
+                <td>{{ staff.review_data.awareness}}</td>
+                <td>{{ staff.review_data.total }}</td>
+                <td ng-if="!staffListCtrl.session.checkPermission('STAFF','EDIT', staff.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{staff.viewUrl}}"><i class="fa fa-user"></i></a></td>
+                <td ng-if="staffListCtrl.session.checkPermission('STAFF','EDIT', staff.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{staff.editUrl}}"><i class="fa fa-user"></i></a></td>
+            </tr>
+            <tr ng-show="staffListCtrl.staffList.length == 0">
+                <td colspan="12" style="text-align:center;"><h2>No Staff Matched your search for: "{{ staffListCtrl.queryParameters.search }}"</h2></td>
+            </tr>
+        </tbody>
+    </table>

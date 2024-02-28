@@ -4,12 +4,11 @@ import './borderStation.less';
 const CheckboxGroup = require('../checkboxGroup.js');
 
 import detailTemplate from './step-templates/detail.html';
-import committeeTemplate from './step-templates/committee/committee.html';
+import committeeTemplate from './step-templates/committeeNew.html';
 import staffTemplate from './step-templates/staff/staff.html';
 import staffNewTemplate from './step-templates/staffNew.html';
 import locationTemplate from './step-templates/location/location.html';
 import formsTemplate from './step-templates/forms.html';
-import committeeModalTemplate from './step-templates/committee/committeeModal.html';
 import staffModalTemplate from './step-templates/staff/staffModal.html';
 import staffWorkModalTemplate from './step-templates/staff/staffWorkModal.html';
 import locationModalTemplate from './step-templates/location/locationModal.html';
@@ -60,7 +59,7 @@ class BorderStationController extends BaseFormController  {
         this.stepTemplates = [
             {template:detailTemplate, name:"Details"},
             {template:committeeTemplate, name:"Subcommittee"},
-            {template:($stateParams.new_staff === 'true' ? staffNewTemplate : staffTemplate), name:"Staff"},
+            {template:staffNewTemplate, name:"Staff"},
             {template:locationTemplate, name:"Locations"},
             {template:formsTemplate, name:"Forms"},
         ];
@@ -446,6 +445,7 @@ class BorderStationController extends BaseFormController  {
         this.service.getUserStations(this.session.user.id, 'PROJECTS', 'VIEW').then((response) => {
            	this.projects = response.data;
            	this.getStaffList();
+           	this.getSubcommitteeList();
         });
     }
     
@@ -467,6 +467,25 @@ class BorderStationController extends BaseFormController  {
 			        }
 		        }
 	    });
+    }
+    
+    getSubcommitteeList() {
+    	this.service.getSubcommitteeList([
+    		{"name": "page_size", "value": 1000},
+	    	{"name": "reverse", "value": false},
+	    	{"name": "ordering", "value": 'first_name, last_name'},
+	    	{"name": "project_id", "value": this.stationId},
+	    	]).then ((response) => {
+	            this.subcommitteeList = response.data.results;
+		        for (let idx=0; idx < this.subcommitteeList.length; idx++) {
+		            let subcommittee = this.subcommitteeList[idx];
+		            if (this.session.checkPermission('SUBCOMMITTEE','EDIT',null, null)) {
+		            	subcommittee.url = this.$state.href('subcommittee', {id:subcommittee.id, isViewing:false });
+		            } else {
+			            subcommittee.url = this.$state.href('subcommittee', {id:subcommittee.id, isViewing:true});
+			        }
+		        }
+		});
     }
     
     projectText(staffList) {

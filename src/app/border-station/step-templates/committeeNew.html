@@ -1,0 +1,24 @@
+<div id="subcommittee-boxes" class="row stretch-vertical">
+	<table class="table table-striped" float-thead="$ctrl.stickyOptions" ng-model="$ctrl.subcommitteeList">
+        <thead class="sticky-table-header">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Country</th>
+                <th>Phone</th>
+                <th width="15%">Position</th>
+                <th width="12%">Projects</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="subcommittee in $ctrl.subcommitteeList | orderBy:this.queryParameters.ordering:this.queryParameters.reverse">
+                <td><a ng-href="{{subcommittee.url}}">{{ subcommittee.first_name }} {{ subcommittee.last_name }}</a></td>
+                <td>{{ subcommittee.email }}</td>
+                <td>{{ $ctrl.getCountryName(subcommittee.country) }}</td>
+                <td>{{ subcommittee.phone}}</td>
+                <td class="ellipsis" title="{{ subcommittee.position }}">{{ subcommittee.position}}</td>
+                <td class="ellipsis" title="{{ subcommittee.projectText }}">{{ subcommittee.project_text }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,76 @@
+<div class="container" id="subcommitteeList"><br/>
+
+    <div class="row">
+        <div class="col-xs-7 text-center">
+            <h1>Subcommittee Members</h1>
+        </div>
+
+        <div class="pull-right"><br>
+            <a ng-if="listCtrl.hasAddPermission" class="btn btn-success" ui-sref="subcommittee({id: null, isViewing: false})">
+                Input New Subcommittee Member
+            </a>
+        </div>
+    </div>
+
+    <div class="row padding-bottom-10">
+        <div class="col-md-3" >
+        	<div class="col-md-6">
+	        	<p>Country</p>
+	            <div ng-dropdown-multiselect="" options="listCtrl.countryDropDown.options"
+								selected-model="listCtrl.countryDropDown.selectedOptions"
+	                             extra-settings="listCtrl.countryDropDown.settings"
+	                             translation-texts="listCtrl.countryDropDown.customText"
+	                             events="listCtrl.countryDropDown.eventListener">
+				</div>
+			</div>
+			<div class="col-md-6" ng-if="listCtrl.countryDropDown.selectedOptions.length!==0 && listCtrl.projects.length!==0">
+				<p>Project</p>
+	        	<select ng-model="listCtrl.queryParameters.project_id" ng-change="listCtrl.searchSubcommittee()">
+	        		<option value=''>All</option>
+	        		<option value="{{ project.id }}" ng-repeat="project in listCtrl.projects"
+	        				ng-if="listCtrl.countryDropDown.selectedOptions[0].id===project.operating_country">{{ project.station_name }}</option>
+	        	</select>
+        	</div>
+        </div>
+
+        <!-- Search -->
+        <div class="col-md-2 pull-right">
+        	<div>
+        		<input ng-change="listCtrl.searchSubcommittee()" ng-model="listCtrl.queryParameters.search" placeholder="Search" autofocus>
+        	</div>
+        </div>
+        <!-- End search -->
+    </div>
+    <table class="table table-striped" float-thead="listCtrl.stickyOptions" ng-model="listCtrl.subcommitteeList">
+        <thead class="sticky-table-header">
+            <tr>
+                <th ng-click="listCtrl.updateSort('first_name,last_name')" width="25%">Name
+                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': listCtrl.getSortIcon('first_name,last_name', '!reverse'),
+                    'glyphicon glyphicon-sort-by-alphabet-alt': listCtrl.getSortIcon('first_name,last_name', 'reverse') }"></i>
+                </th>
+                <th width="11%">Phone</th>
+                <th width="20%">Email</th>
+                <th width="25%">Projects</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="member in listCtrl.subcommitteeList | orderBy:this.queryParameters.ordering:this.queryParameters.reverse">
+                <td>{{ member.first_name }} {{ member.last_name }}</td>
+                <td>{{ member.phone}}</td>
+                <td>{{ member.email }}</td>
+                <td class="ellipsis" title="{{ member.project_text }}">{{ member.project_text }}</td>
+                <td ng-if="!listCtrl.session.checkPermission('SUBCOMMITTEE','EDIT_BASIC', member.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{ member.viewUrl }}"><i class="fa fa-user"></i></a></td>
+                <td ng-if="listCtrl.session.checkPermission('SUBCOMMITTEE','EDIT_BASIC', member.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{ member.editUrl}}"><i class="fa fa-user"></i></a></td>
+            </tr>
+            <tr ng-show="listCtrl.subcommitteeList.length == 0">
+                <td colspan="12" style="text-align:center;"><h2>No Staff Matched your search for: "{{ listCtrl.queryParameters.search }}"</h2></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row text-center">
+        <paginate page-control="listCtrl.paginate" controller="listCtrl">
+    </div>
+    <br>
+</div>

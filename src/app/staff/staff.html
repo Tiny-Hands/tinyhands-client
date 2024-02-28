@@ -11,7 +11,7 @@
         	<a ng-repeat="stepTemplate in vm.stepTemplates"
         		class="btn btn-default"
         		ng-class="{active: vm.selectedStep == $index}" 
-        		ng-click="vm.selectedStep = $index;">{{stepTemplate.name}}</a>
+        		ng-click="vm.changeTab($index);">{{stepTemplate.name}}</a>
         </div>
         <hr class="margin-bottom-0" />
     </div>
@@ -23,10 +23,5 @@
     </div>
     <div class="alert alert-danger" ng-repeat="errors in vm.getErrorMessages()">
         <strong>Error! {{errors}}</strong>
-    </div>
-    <div class="container-fluid padding-bottom-20">
-        <div class="col-xs-6 text-right">
-            <button class="btn btn-success margin-left-20" ng-click="vm.submit()" ng-disabled="$ctrl.stateParams.isViewing === 'true'">Submit</button>
-        </div>
     </div>
 </div>

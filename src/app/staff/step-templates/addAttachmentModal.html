@@ -1,0 +1,74 @@
+<div id="staff-attachment-modal" class="modal-content">
+    <form name="AttachmentForm" ng-disabled="vm.isViewing === 'true'">
+    	<div class="modal-header">
+            <button type="button" class="close" ng-click="vm.dismiss()">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <div class="col-md-5">
+            	<h3 class="modal-title">Staff Attachment</h3>
+            </div>
+        </div>
+        <div class="modal-body">
+        	<div class="row">
+	            <div class="col-md-2 form-group">
+		    		<label>Description</label>
+		    	</div>
+				<div class="col-md-10 form-group">
+			        <input type="text" min="0" class="form-control" ng-model="vm.card.description">
+		        </div>
+            </div>
+            <div class="row">
+            	<div class="col-md-2 form-group">
+		    		<label>Type</label>
+		    	</div>
+		    	<div class="col-md-5 form-group">
+		            <select class="form-control" ng-model="vm.card.option">
+                        <option value="Contract">Contract</option>
+                        <option value="C & M">Corruption & Misconduct Agreement (C & M)</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
+                    </select>
+	            </div>
+	        </div>
+	        <div class="row">
+	            <div class="col-md-2 form-group">
+		    		<label>Expiration Date</label>
+		    	</div>
+				<div class="col-md-3 form-group">
+			        <input type="date" class="form-control" ng-model-options="{timezone: 'utc'}" ng-model="vm.expirationDate">
+			    </div>
+            </div>
+            <div class="row center-vertical">
+	            <div class="col-md-2 form-group">
+	                <form-step>
+	                    <label>File to attach</label>
+	                </form-step>
+	            </div>
+	            <input type="file" ngf-select value="Choose File" ng-model="vm.card.attachment">
+            </div>
+            <div class="row center-vertical">
+            	<div class="col-md-2 form-group">
+	            </div>
+	            <div ng-if="!vm.isString(vm.card.attachment)">
+	        		<p>{{ vm.card.attachment.name }}</p>
+	        	</div>
+	        	<div ng-if="vm.isString(vm.card.attachment)">
+	        		<a href="{{ vm.getScannedFormUrl(vm.card.attachment) }}">{{ vm.card.attachment.split("/")[5] }}</a>
+	        	</div>
+        	</div>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-xs-4">
+                    <button class="btn btn-success float-left" ng-click="vm.save()" ng-disabled="!vm.canSave()" ng-if="!vm.isViewing">Save</button>
+                </div>
+                <div class="col-xs-4 text-center">
+                    <button class="btn btn-danger" ng-click="vm.delete()" ng-if="!vm.isAdd && !vm.isViewing">Delete</button>
+                </div>
+                <div class="col-xs-4">
+                    <button class="btn btn-default" ng-click="vm.dismiss()">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

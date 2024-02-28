@@ -1,0 +1,42 @@
+	<table class="table table-striped" float-thead="staffListCtrl.stickyOptions" ng-model="staffListCtrl.staffList">
+        <thead class="sticky-table-header">
+            <tr>
+            	<th width="8%">Projects</th>
+                <th ng-click="staffListCtrl.updateSort('first_name,last_name')" width="18%">Name
+                    <i ng-class="{ 'glyphicon glyphicon-sort-by-alphabet': staffListCtrl.getSortIcon('first_name,last_name', '!reverse'),
+                    'glyphicon glyphicon-sort-by-alphabet-alt': staffListCtrl.getSortIcon('first_name,last_name', 'reverse') }"></i>
+                </th>
+                <th width="14%">Coordinator</th>
+                <th width="7%">General</th>
+                <th width="7%">Awareness</th>
+                <th width="7%">Security</th>
+                <th width="7%">Accounting</th>
+                <th width="7%">PV Care</th>
+                <th width="7%">Paralegal</th>
+                <th width="7%">Records</th>
+                <th width="7%">Shelter</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="staff in staffListCtrl.staffList | orderBy:this.queryParameters.ordering:this.queryParameters.reverse">
+            	<td class="ellipsis" title="{{ staff.projectText }}">{{ staff.projectText }}</td>
+                <td>{{ staff.first_name }} {{ staff.last_name }}</td>
+                <td class="ellipsis" title="{{ staff.coordinatorRoles }}">{{ staff.coordinatorRoles}}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'general')">{{ staffListCtrl.monthYearString(staff.knowledge_data.general) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'awareness')">{{ staffListCtrl.monthYearString(staff.knowledge_data.awareness) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'security')">{{ staffListCtrl.monthYearString(staff.knowledge_data.security) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'accounting')">{{ staffListCtrl.monthYearString(staff.knowledge_data.accounting) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'pv_care')">{{ staffListCtrl.monthYearString(staff.knowledge_data.pv_care) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'paralegal')">{{ staffListCtrl.monthYearString(staff.knowledge_data.paralegal) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'records')">{{ staffListCtrl.monthYearString(staff.knowledge_data.records) }}</td>
+                <td ng-class="staffListCtrl.knowledgeClass(staff,'shelter')">{{ staffListCtrl.monthYearString(staff.knowledge_data.shelter) }}</td>
+                
+                <td ng-if="!staffListCtrl.session.checkPermission('STAFF','EDIT_BASIC', staff.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{staff.viewUrl}}"><i class="fa fa-user"></i></a></td>
+                <td ng-if="staffListCtrl.session.checkPermission('STAFF','EDIT_BASIC', staff.country, null)"><a class="btn btn-sm btn-primary" ng-href="{{staff.editUrl}}"><i class="fa fa-user"></i></a></td>
+            </tr>
+            <tr ng-show="staffListCtrl.staffList.length == 0">
+                <td colspan="12" style="text-align:center;"><h2>No Staff Matched your search for: "{{ staffListCtrl.queryParameters.search }}"</h2></td>
+            </tr>
+        </tbody>
+    </table>

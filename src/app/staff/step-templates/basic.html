@@ -1,0 +1,142 @@
+<fieldset id="staffBasic" class="container-fluid" ng-disabled="!vm.basicEdit">
+	<div class="row">
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3">First Name</label>
+            <input class="col-md-9" type="text" class="form-control" placeholder="First Name" ng-model="vm.staff.first_name">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="lastName">Last Name</label>
+            <input class="col-md-9" type="text" class="form-control" placeholder="Last Name"
+                   ng-model="vm.staff.last_name">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="lastName">Country</label>
+            <div class="col-md-9">
+            	<select ng-model="vm.staff.country">
+            		<option value="{{ country.id }}" ng-repeat="country in vm.countries">{{ country.name }}</option>
+            	</select>
+            </div>
+          </div>
+	</div>
+	<div class="row">
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="email">Email</label>
+            <input class="col-md-9" type="text" class="form-control" placeholder="Email Address"
+                   ng-model="vm.staff.email">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-4" for="phone">Phone Number</label>
+            <input class="col-md-8" type="text" class="form-control" placeholder="Phone Number"
+                   ng-model="vm.staff.phone">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="col-md-3" for="position">Birthday</label>
+            <input class="col-md-9" type="text" class="form-control" ng-model="vm.staff.birth_date">
+          </div>
+	</div>
+	<div class="row">
+		 <div class="col-sm-4 form-group">
+		   <label class="col-md-3" for="position">ID Card Expiration</label>
+           <input class="col-md-9" type="date" class="form-control" ng-model-options="{timezone: 'utc'}" ng-model="vm.idExpirationDate">
+         </div>
+         <div class="col-sm-4 form-group">
+          	<label class="col-md-3" for="joined">Start Date</label>
+          	<input class="col-md-9" type="date" class="form-control" ng-model-options="{timezone: 'utc'}" ng-model="vm.startDate" ng-readonly="!vm.basicEdit">
+         </div>
+         <div class="col-sm-4 form-group">
+          	<label class="col-md-3" for="education">Education</label>
+          	<select ng-model="vm.staff.education">
+          		<option ng-repeat="option in vm.educationOptions">{{ option }}</option>
+          	</select>
+         </div>
+	</div>
+	<div class="row">
+		 <div class="col-md-1 form-group">
+           <label class="col-md-12">Position:</label>
+         </div>
+         <div class="col-md-11 form-group">
+         	<form-step type="checkbox" class="col-md-3" ng-repeat="positionOption in vm.positionOptions"
+				label="{{positionOption}}" response-value="vm.checkboxGroup.questions['position'][positionOption]"
+				ng-show="vm.showPosition(positionOption)"></form-step>
+			<form-step type="otherCheckbox" class="col-md-3"
+				label="Other" response-value="vm.checkboxGroup.questions['position'].internalOther"></form-step>
+         </div>
+	</div>
+	
+	<div class="row">
+		<div class='col-md-4' ng-repeat="item in vm.staff.miscellaneous">
+			<div class="col-md-8">
+				<label>{{ item.type_detail.name }}</label>
+			</div>
+			<div class="col-md-4">
+				<input type="text" ng-if="item.type_detail.type==='string'" ng-model="item.value">
+				<input type="text" ng-if="item.type_detail.type==='integer'" ng-model="item.value" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+				<select ng-if="item.type_detail.type==='choice'" ng-model="item.value">
+					<option ng-repeat="optionValue in item.type_detail.choices.split(';')">{{ optionValue }}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="row col-md-12 padding-bottom-20">
+      	<table class="table table-striped" float-thead="vm.stickyOptions" ng-model="vm.staffList">
+        	<thead class="sticky-table-header">
+        		<tr>
+        			<th colspan="5" class="text-center">
+        				Projects &nbsp;
+        				<button class="btn btn-success" ng-click="vm.addProject()"><i class="fa fa-plus"></i></button>
+        			</th>
+        		</tr>
+        		<tr>
+        			<th>Name</th>
+        			<th>Code</th>
+        			<th>Category</th>
+        			<th>Coordinator</th>
+        			<th>Receives MDF</th>
+        			<th></th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        		<tr ng-repeat="project in vm.staff.staffproject_set">
+        			<td><a ng-href="{{vm.getProjectRef(project.border_station)}}">{{ vm.projectsById[project.border_station].station_name }}</a></td>
+        			<td>{{ vm.projectsById[project.border_station].station_code }}</td>
+        			<td>{{ vm.projectsById[project.border_station].project_category_name }}</td>
+        			<td ng-dropdown-multiselect="project" options="vm.coordinator[project.border_station].options"
+							selected-model="vm.coordinator[project.border_station].selectedOptions"
+                             extra-settings="vm.coordinator[project.border_station].settings"></td>
+        			<td ng-if="vm.projectsById[project.border_station].features.indexOf('hasMDF') >= 0"><input type="checkbox" ng-model="project.receives_money_distribution_form" ></td>
+        			<td ng-if="vm.projectsById[project.border_station].features.indexOf('hasMDF') < 0"></td>
+        			<td>
+        				<button ng-if="vm.session.checkPermission('STAFF','EDIT_BASIC', project.country_id,project.border_station)"
+        						class="btn btn-danger" ng-click="vm.removeProject(project)"><i class="fa fa-minus"></i></button>
+        			</td>
+        		</tr>
+        	</tbody>
+        </table>
+	</div>
+      
+    <div class="row" ng-if="vm.isRemove">
+    	<div class="col-md-3 form-group">
+          <label>Enter last date as member of staff before deleting</label>
+       	</div>
+       	<div class="col-md-2 form-group">
+          <input type="date" class="form-control" ng-model-options="{timezone: 'utc'}" ng-model="vm.lastDate">
+        </div>
+    </div>
+    <div class="container-fluid padding-bottom-20" ng-if="vm.basicEdit && !vm.isRemove">
+        <div class="col-md-6 text-right">
+            <button class="btn btn-success margin-left-20" ng-if="vm.basicModified()" ng-click="vm.basicSave()">Save</button>
+        </div>
+        <div class="col-md-6 text-left" ng-if="vm.canDelete">
+            <button class="btn btn-danger" ng-click="vm.isRemove=true">Delete</button>
+        </div>
+    </div>
+    <div class="container-fluid padding-bottom-20" ng-if="vm.isRemove">
+        <div class="col-md-6 text-right">
+            <button class="btn btn-success margin-left-20" ng-click="vm.isRemove=false">Cancel Delete</button>
+        </div>
+        <div class="col-md-6 text-left" ng-if="vm.canDelete">
+            <button class="btn btn-danger" ng-disabled="!vm.lastDate" ng-click="vm.deleteStaff()">Confirm Delete</button>
+        </div>
+    </div>
+</fieldset>

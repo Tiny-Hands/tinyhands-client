@@ -1,0 +1,18 @@
+<fieldset id="staffKnowledge" class="container-fluid" ng-disabled="!vm.knowledgeEdit">
+	<div class="row class=col-md-12">
+		<div class="col-md-3 text-center padding-bottom-20" ng-repeat="item in vm.knowledgeDates.items">
+			<div>
+				<label>{{ vm.knowledgeDates.itemLabels[$index] }}</label>
+			</div>
+			<div>
+				<input type="date" ng-class="vm.knowledgeClass(item)" ng-model-options="{timezone: 'utc'}"
+						ng-model="vm.knowledgeDates[item]" ng-readonly="!vm.knowledgeEdit">
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid padding-bottom-20" ng-if="vm.knowledgeEdit">
+        <div class="col-xs-6 text-right">
+            <button class="btn btn-success margin-left-20" ng-if="vm.knowledgeModified()" ng-click="vm.knowledgeSave()">Save</button>
+        </div>
+    </div>
+</fieldset>
